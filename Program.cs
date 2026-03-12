@@ -1,38 +1,31 @@
-using Libs;
+п»їusing Libs;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Client
+namespace DS_Server
 {
-    internal static class Program
+    class Program
     {
-        /// <summary>
-        ///  The main entry point for the application.
-        /// </summary>
-        [STAThread]
-        static void Main()
+        static async Task Main(string[] args)
         {
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            // Настройка контейнера DI
+            // РќР°СЃС‚СЂРѕР№РєР° РєРѕРЅС‚РµР№РЅРµСЂР° DI
             var services = new ServiceCollection();
             ConfigureServices(services);
 
-            // Создание провайдера услуг
+            // РЎРѕР·РґР°РЅРёРµ РїСЂРѕРІР°Р№РґРµСЂР° СѓСЃР»СѓРі
             var serviceProvider = services.BuildServiceProvider();
 
-            // Запуск главной формы
-            var form = serviceProvider.GetRequiredService<ClientForm>();
-            // To customize application configuration such as set high DPI settings or default font,
-            // see https://aka.ms/applicationconfiguration.
-            //ApplicationConfiguration.Initialize();
-            Application.Run(form);
+            // РџРѕР»СѓС‡РµРЅРёРµ СЌРєР·РµРјРїР»СЏСЂР° Server С‡РµСЂРµР· DI
+            var server = serviceProvider.GetRequiredService<Server>();
+
+            // Р—Р°РїСѓСЃРє СЃРµСЂРІРµСЂР°
+            await Server.Start();
         }
+
         private static void ConfigureServices(IServiceCollection services)
         {
-            // Регистрация зависимостей
-            services.AddTransient<ILogic, Logic>();
-            services.AddTransient<IDS, DS>(); // Регистрируем интерфейс и его реализацию
-            services.AddTransient<ClientForm>(); // Регистрируем форму
+            // Р РµРіРёСЃС‚СЂР°С†РёСЏ Р·Р°РІРёСЃРёРјРѕСЃС‚РµР№
+            services.AddTransient<IDS, DS>(); // Р РµРіРёСЃС‚СЂРёСЂСѓРµРј РёРЅС‚РµСЂС„РµР№СЃ Рё РµРіРѕ СЂРµР°Р»РёР·Р°С†РёСЋ
+            services.AddTransient<Server>(); // Р РµРіРёСЃС‚СЂРёСЂСѓРµРј Server
         }
     }
 }
